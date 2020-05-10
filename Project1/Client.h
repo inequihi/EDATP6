@@ -6,10 +6,12 @@
 #include <curl/curl.h>
 #include "json.hpp"
 #include <string>
+#include"Tweet.h"
+#include <vector>
 
 using json = nlohmann::json;
 //Funciones auxiliares
-void printNames(std::list<std::string> names);
+//void printNames(std::vector<Tweet> tweets);
 static size_t myCallback(void* contents, size_t size, size_t nmemb, void* userp);
 
 class Client {
@@ -24,9 +26,8 @@ public:
 	//~Client();
 
 private:
-	
+	void printNames(std::vector<Tweet> tweets_);
 	json Jdata;
-
 	CURL* curl;					//Variable donde vamos a guardar las configuraciones de una transferencia
 	CURLM* multiHandle;			//Variable donde vamos a atachear los easy handles
 	CURLcode codErr;
@@ -39,4 +40,6 @@ private:
 	//std::vector<Tweet> tweets;
 	std::list<std::string> names;
 	std::string readString, token;
+
+	std::vector<Tweet> alltweets; 
 };

@@ -144,11 +144,13 @@ bool Client::GetTweets() {
 			std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(codErr) << std::endl;
 			//Hacemos un clean up de curl antes de salir.
 			curl_easy_cleanup(curl);
+			curl_multi_cleanup(multiHandle);
 			return 0;
 		}
 
 		//Siempre realizamos el cleanup al final
 		curl_easy_cleanup(curl);
+		curl_multi_cleanup(multiHandle);
 
 		//Si el request de CURL fue exitoso entonces twitter devuelve un JSON
 		//con toda la informacion de los tweets que le pedimos
@@ -157,9 +159,14 @@ bool Client::GetTweets() {
 		{
 			//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
 			for (auto element : Jdata)
-				names.push_back(element["text"]);
+			{
+				Tweet tempTweet(element["created_at"],element["text"]);
+				alltweets.push_back(tempTweet);
+				//~tempTweet();    //DEBERIA DESTRUIR TEMPTWEET?
+			}
+				
 			std::cout << "Tweets retrieved from Twitter account: " << std::endl;
-			printNames(names);
+			printNames(alltweets);
 		}
 		catch (std::exception& e)
 		{
@@ -178,15 +185,13 @@ bool Client::GetTweets() {
 }
 
 //Funcion auxiliar para imprimir los tweets en pantalla una vez parseados
-void printNames(std::list<std::string> names)
+void Client::printNames(std::vector<Tweet> tweets_)
 {
-	for (auto c : names)
+	int i;
+	for (i=0; i< tweets_.size() ; ++i)
 	{
-		//Eliminamos el URL al final para mostrar
-		int extended = c.find("https");
-		c = c.substr(0, extended);
-		c.append("...");
-		std::cout << c << std::endl;
+		std::cout << tweets_[i].GetFecha() << std::endl;
+		std::cout << usuario << ": " << tweets_[i].GetData() << std::endl;
 		std::cout << "-----------------------------------------" << std::endl;
 	}
 }

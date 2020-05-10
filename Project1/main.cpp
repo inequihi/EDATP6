@@ -5,7 +5,7 @@ int main(void) {
 
 	Client client("lanacion", 10);
 
-	//basicLCD* myptr=new allegroLCD;
+	basicLCD* myptr=new allegroLCD;
 
 	if (client.GetToken()) {
 
@@ -14,5 +14,5 @@ int main(void) {
 
 	}
 
-	//delete myptr;
+	delete myptr;
 }
