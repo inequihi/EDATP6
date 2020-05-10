@@ -15,7 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="allegroLCD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tweet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -23,5 +32,20 @@
     <ClInclude Include="json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="allegroLCD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="basicLCD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tweet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

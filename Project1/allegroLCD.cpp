@@ -76,7 +76,7 @@ bool allegroLCD::lcdMoveCursorRight() {
 }
 
 bool allegroLCD::lcdMoveCursorLeft() {
-	if (cadd != 0 && cadd != 33) {
+	if (cadd != 0 && cadd != 33) {				//decia 33 pero pude 32.esta bien???
 		cadd -= 1;
 		return true;
 	}
