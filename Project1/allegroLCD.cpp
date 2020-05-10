@@ -99,7 +99,6 @@ bool allegroLCD::lcdClearToEOL() {
 	int line = (cadd-1) / 16;
 	int allOk;
 	int aux_cadd = cadd-1;
-	char* chars = (char*)content;
 	switch (line) {
 		case 0:
 			for (; aux_cadd < 16; aux_cadd++) {
@@ -178,17 +177,18 @@ allegroLCD& allegroLCD::operator<<(const unsigned char* c) {
 	int col = currentPos % 16;
 	int space_left = 16 - col;
 	int start_drawing;
-	int size;
+	size_t size;
 	if (space_left >= message.size()) {
 		start_drawing = 0;
 		size = message.size();
 	}
 	else {
-		start_drawing = message.size() - space_left;
+		start_drawing = static_cast<int>(message.size()) - space_left;
 		size = space_left;
 	}
 	content[line].replace(col, message.size(), message.substr(start_drawing, size));
 	refreshDisplay();
+	cadd = cadd += static_cast<int>(size);
 	return *this;
 
 }
