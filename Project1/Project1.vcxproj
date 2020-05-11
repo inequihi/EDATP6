@@ -153,6 +153,12 @@
   <ItemGroup>
     <ClCompile Include="allegroLCD.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="Imgui_files\imgui.cpp" />
+    <ClCompile Include="Imgui_files\imgui_demo.cpp" />
+    <ClCompile Include="Imgui_files\imgui_draw.cpp" />
+    <ClCompile Include="Imgui_files\imgui_impl_allegro5.cpp" />
+    <ClCompile Include="Imgui_files\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Tweet.cpp" />
   </ItemGroup>
@@ -160,14 +166,26 @@
     <ClInclude Include="allegroLCD.h" />
     <ClInclude Include="basicLCD.h" />
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Gui.h" />
+    <ClInclude Include="Imgui_files\imconfig.h" />
+    <ClInclude Include="Imgui_files\imgui.h" />
+    <ClInclude Include="Imgui_files\imgui_impl_allegro5.h" />
+    <ClInclude Include="Imgui_files\imgui_internal.h" />
+    <ClInclude Include="Imgui_files\imstb_rectpack.h" />
+    <ClInclude Include="Imgui_files\imstb_textedit.h" />
+    <ClInclude Include="Imgui_files\imstb_truetype.h" />
     <ClInclude Include="Tweet.h" />
     <ClInclude Include="json.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Imgui_files\imgui.ini" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="dotty.ttf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="twitterbac.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

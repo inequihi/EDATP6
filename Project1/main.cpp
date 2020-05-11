@@ -1,18 +1,11 @@
-#include "Client.h"
-#include "allegroLCD.h"
+//#include "Client.h"
+//#include "allegroLCD.h"
+#include "Gui.h"
 
 int main(void) {
 
-	Client client("lanacion", 10);
+	Gui TwitterProgram;
+	TwitterProgram.startGUI();
 
-	//std::shared_ptr<basicLCD>my_lcd = make_shared<allegroLCD>();
-
-	if (client.GetToken()) {
-
-		client.GetTweets();
-		
-		
-	}
-
-	
+	return 0;
 }

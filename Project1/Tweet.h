@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#define MAX_TWITTER_NAME 15
 
 using namespace std;
 

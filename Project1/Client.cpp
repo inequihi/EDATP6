@@ -1,6 +1,11 @@
 #include "Client.h"
 
-
+Client::Client()
+{
+	usuario = "";
+	numTweets = 0;
+	query = "";
+}
 
 Client::Client(std::string usuario_, int nTweets_) {
 

@@ -22,7 +22,7 @@ static size_t myCallback(void* contents, size_t size, size_t nmemb, void* userp)
 class Client {
 
 public:
-
+	Client();
 	Client(std::string usuario_,int nTweets_);
 	void LoadTweets();
 	bool GetTweets();
