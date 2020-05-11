@@ -32,6 +32,7 @@ protected:
 	ALLEGRO_BITMAP* background;
 	ALLEGRO_EVENT ev;
 	ALLEGRO_EVENT_QUEUE* queue;
+	ALLEGRO_TIMER* timer;
 	bool settingUp;
 	bool close;
 	ImVec4 clear_color;

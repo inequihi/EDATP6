@@ -5,10 +5,12 @@ Gui::Gui()
 {
 	if (AllegroInit() && ImguiInit())
 	{
+		timer = al_create_timer(1 / 30.0);
 		this->queue = al_create_event_queue();
 		al_register_event_source(this->queue, al_get_display_event_source(display));
 		al_register_event_source(this->queue, al_get_mouse_event_source());
 		al_register_event_source(this->queue, al_get_keyboard_event_source());
+		al_register_event_source(this->queue, al_get_timer_event_source(timer));
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		settingUp = true;
 		close = false;
@@ -25,12 +27,15 @@ Gui::~Gui()
 	//	al_destroy_bitmap(background);
 	if (display)
 		al_destroy_display(display);
+	if (timer)
+		al_destroy_timer(timer);
 	ImGui_ImplAllegro5_Shutdown();
 	ImGui::DestroyContext();
 }
 
 void Gui::startGUI()
 {
+	al_start_timer(timer);
 	int times = 0;
 	bool firstTime = true;
 	do {
@@ -57,6 +62,8 @@ void Gui::startGUI()
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 					my_client.GetTweets();
+					currentTweetData = my_client.returnTweet(currentTweet, cantTw);
+					currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 					myLCD = make_unique<allegroLCD>();
 				}
 				
@@ -80,7 +87,9 @@ void Gui::startGUI()
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			
 			al_flip_display();
-			showTweet();
+			if (ev.type == ALLEGRO_EVENT_TIMER) {
+				showTweet();
+			}
 
 		}
 		
@@ -111,7 +120,6 @@ void Gui::print_gui_setup()
 		userTw.assign(user);
 	}
 	ImGui::End();
-
 }
 
 void Gui::print_gui_controls() {
@@ -158,8 +166,7 @@ void Gui::showTweet() {
 	cursorPosition DatePos = { 1,1 };
 
 	myLCD->lcdSetCursorPosition(DatePos);
-	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
-	
+	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.c_str());
 	myLCD->lcdSetCursorPosition(RealPos);
 
 }

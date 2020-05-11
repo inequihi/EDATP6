@@ -6,7 +6,8 @@ using namespace std;
 allegroLCD::allegroLCD() {
 	if (!al_init()) {
 		initError = true;
-		cout << "Couldn't initialize allegro (lcd emulation)" << endl;
+		
+		cout<< "Couldn't initialize allegro (lcd emulation)" << endl;
 	}
 	if (!al_init_font_addon()) {
 		initError = true;
