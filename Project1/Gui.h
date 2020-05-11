@@ -7,12 +7,12 @@
 #include <allegro5/allegro_primitives.h>
 #include "imgui_files/imgui.h"
 #include "imgui_files/imgui_impl_allegro5.h"
-#include <memory>
+
 
 #define SIZE_SCREEN_X 900
 #define SIZE_SCREEN_Y 300
 
-class Gui:public Client, public allegroLCD
+class Gui
 {
 public:
 	Gui();
@@ -33,7 +33,7 @@ protected:
 	bool settingUp;
 	bool close;
 	ImVec4 clear_color;
-	std::shared_ptr<basicLCD>my_lcd;
+	//std::shared_ptr<basicLCD>my_lcd;
 	Client my_client;
 };
 

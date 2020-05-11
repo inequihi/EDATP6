@@ -5,14 +5,17 @@ Client::Client()
 	usuario = "";
 	numTweets = 0;
 	query = "";
+	myLCD = new allegroLCD;
 }
+
+
 
 Client::Client(std::string usuario_, int nTweets_) {
 
 	usuario = usuario_;
 	numTweets = nTweets_;
 	query += usuario + "&count=" + std::to_string(numTweets) ; 
-
+	myLCD = new allegroLCD;
 }
 
 bool Client::GetToken() {
@@ -161,17 +164,22 @@ bool Client::GetTweets() {
 		//con toda la informacion de los tweets que le pedimos
 		Jdata = json::parse(readString);
 		try
-		{
+		{	
 			//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
 			for (auto element : Jdata)
 			{
-				Tweet tempTweet(element["created_at"],element["text"]);
+				string data = boost::locale::conv::from_utf <char>(element["text"],"ISO-8859-15" );
+				string fecha= boost::locale::conv::from_utf <char>(element["created_at"], "ISO-8859-15");
+
+				Tweet tempTweet(fecha,data);
+				tempTweet.checkData();
+
 				alltweets.push_back(tempTweet);
 				//~tempTweet();    //DEBERIA DESTRUIR TEMPTWEET?
 			}
 				
 			std::cout << "Tweets retrieved from Twitter account: " << std::endl;
-			printNames(alltweets);
+			printTweets(alltweets);
 		}
 		catch (std::exception& e)
 		{
@@ -183,22 +191,28 @@ bool Client::GetTweets() {
 		std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
 
 
-	LoadTweets();
 	return 0;
 
 
 }
 
-void Client::LoadTweets() {
+void Client::TweetsToLCD(int nTweet) {
 
 
 
+	string fecha = alltweets[nTweet].GetFecha();
+	string data = alltweets[nTweet].GetData();
+	//myLCD->lcdSetCursorPosition(datePos);
 
+	*myLCD << reinterpret_cast<const unsigned char*>(fecha.c_str());
 
+	
 }
 
+
+
 //Func09ion auxiliar para imprimir los tweets en pantalla una vez parseados
-void Client::printNames(std::vector<Tweet> tweets_)
+void Client::printTweets(std::vector<Tweet> tweets_)
 {
 	int i;
 	for (i=0; i< tweets_.size() ; ++i)

@@ -12,7 +12,32 @@ Tweet::Tweet(string fecha_,string data_) {
 	data_ = transformData(data_);
 	data = data_;
 	fecha = fecha_;
+	checkData();
 }
+
+void Tweet::checkData() {
+
+	boost::replace_all(data,"á","a");
+	boost::replace_all(data,"é", "e");
+	boost::replace_all(data,"í", "i");
+	boost::replace_all(data,"ó", "o");
+	boost::replace_all(data,"ú", "u");
+
+	boost::replace_all(data, "Á", "A");
+	boost::replace_all(data, "É", "E");
+	boost::replace_all(data, "Í", "I");
+	boost::replace_all(data, "Ó", "O");
+	boost::replace_all(data, "Ú", "U");
+
+	boost::replace_all(data,"ñ", "n");
+	boost::replace_all(data,"Ñ", "N");
+
+	boost::replace_all(data,"¡", "");
+	boost::replace_all(data,"¿", "");
+
+
+}
+
 
 string Tweet::transformFecha(string fecha_)
 {

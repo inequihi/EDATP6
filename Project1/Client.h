@@ -10,11 +10,11 @@
 #include <vector>
 #include <memory>
 #include "allegroLCD.h"
-
-
+#include "boost/locale.hpp"
+#include <memory>
 using json = nlohmann::json;
 //Funciones auxiliares
-//void printNames(std::vector<Tweet> tweets);
+//void printTweets(std::vector<Tweet> tweets);
 static size_t myCallback(void* contents, size_t size, size_t nmemb, void* userp);
 
 
@@ -24,14 +24,15 @@ class Client {
 public:
 	Client();
 	Client(std::string usuario_,int nTweets_);
-	void LoadTweets();
+	
 	bool GetTweets();
 	bool GetToken();
+	void TweetsToLCD(int nTweet);
 
 	//~Client();
 
 private:
-	void printNames(std::vector<Tweet> tweets_);
+	void printTweets(std::vector<Tweet> tweets_);
 	json Jdata;
 	CURL* curl;					//Variable donde vamos a guardar las configuraciones de una transferencia
 	CURLM* multiHandle;			//Variable donde vamos a atachear los easy handles

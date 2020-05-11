@@ -73,13 +73,13 @@ void Gui::startGUI()
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 					my_client.GetTweets();
-					my_lcd = make_unique<allegroLCD>();
-					*my_lcd << reinterpret_cast<const unsigned char*> ("gegeg");
+					//my_lcd = make_unique<allegroLCD>();
+					//*my_lcd << reinterpret_cast<const unsigned char*> ("gegeg");
 				}
 				firstTime = false;
 			}
 
-			//MANDAR TWEETS A LCD 
+			my_client.TweetsToLCD(1); //ejemplo com primer tweet
 		}
 		
 	} while (!close);
