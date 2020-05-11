@@ -12,6 +12,7 @@ Gui::Gui()
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		settingUp = true;
 		close = false;
+
 	}
 	else
 		settingUp = false;
@@ -61,7 +62,7 @@ void Gui::startGUI()
 			//función de Gui de controles del led!!!!
 
 			ImGui::Render();
-
+			al_set_target_backbuffer(display);
 			al_draw_scaled_bitmap(background,
 				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
 				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
@@ -73,13 +74,13 @@ void Gui::startGUI()
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 					my_client.GetTweets();
-					//my_lcd = make_unique<allegroLCD>();
-					//*my_lcd << reinterpret_cast<const unsigned char*> ("gegeg");
+					myLCD = make_unique<allegroLCD>();
+					*myLCD << reinterpret_cast<const unsigned char*> ("gegeg");
 				}
 				firstTime = false;
 			}
 
-			my_client.TweetsToLCD(1); //ejemplo com primer tweet
+			//my_client.TweetsToLCD(1); //ejemplo com primer tweet
 		}
 		
 	} while (!close);

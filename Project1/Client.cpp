@@ -5,7 +5,6 @@ Client::Client()
 	usuario = "";
 	numTweets = 0;
 	query = "";
-	myLCD = new allegroLCD;
 }
 
 
@@ -15,7 +14,6 @@ Client::Client(std::string usuario_, int nTweets_) {
 	usuario = usuario_;
 	numTweets = nTweets_;
 	query += usuario + "&count=" + std::to_string(numTweets) ; 
-	myLCD = new allegroLCD;
 }
 
 bool Client::GetToken() {
@@ -195,21 +193,6 @@ bool Client::GetTweets() {
 
 
 }
-
-void Client::TweetsToLCD(int nTweet) {
-
-
-
-	string fecha = alltweets[nTweet].GetFecha();
-	string data = alltweets[nTweet].GetData();
-	//myLCD->lcdSetCursorPosition(datePos);
-
-	*myLCD << reinterpret_cast<const unsigned char*>(fecha.c_str());
-
-	
-}
-
-
 
 //Func09ion auxiliar para imprimir los tweets en pantalla una vez parseados
 void Client::printTweets(std::vector<Tweet> tweets_)

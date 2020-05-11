@@ -27,9 +27,6 @@ public:
 	
 	bool GetTweets();
 	bool GetToken();
-	void TweetsToLCD(int nTweet);
-
-	//~Client();
 
 private:
 	void printTweets(std::vector<Tweet> tweets_);
@@ -46,7 +43,6 @@ private:
 	//std::vector<Tweet> tweets;
 	std::list<std::string> names;
 	std::string readString, token;
-	basicLCD* myLCD;
 	std::vector<Tweet> alltweets; 
 
 };
