@@ -9,7 +9,7 @@ class Tweet {
 
 public:
 	Tweet();
-	Tweet(string fecha_, string data_);
+	Tweet(string fecha_, string data_, string usuario_);
 	~Tweet();
 	string GetData();
 	size_t GetSize();

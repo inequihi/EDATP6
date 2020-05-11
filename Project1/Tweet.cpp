@@ -5,12 +5,11 @@ Tweet::Tweet()
 	data = "";
 	fecha = "";
 }
-Tweet::Tweet(string fecha_,string data_) {
-
+Tweet::Tweet(string fecha_,string data_, string usuario_) {
 
 	fecha_ = transformFecha(fecha_);
 	data_ = transformData(data_);
-	data = data_;
+	data = usuario_ + " : " + data_ ;
 	fecha = fecha_;
 	checkData();
 }

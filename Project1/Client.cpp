@@ -169,7 +169,7 @@ bool Client::GetTweets() {
 				string data = boost::locale::conv::from_utf <char>(element["text"],"ISO-8859-15" );
 				string fecha= boost::locale::conv::from_utf <char>(element["created_at"], "ISO-8859-15");
 
-				Tweet tempTweet(fecha,data);
+				Tweet tempTweet(fecha,data,usuario);
 				tempTweet.checkData();
 
 				alltweets.push_back(tempTweet);
