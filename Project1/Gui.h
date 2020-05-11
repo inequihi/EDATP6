@@ -18,7 +18,7 @@ public:
 	Gui();
 	~Gui();
 	void startGUI();
-
+	void showTweet();
 
 protected:
 	void print_gui_setup();

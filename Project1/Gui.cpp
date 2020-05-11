@@ -44,13 +44,23 @@ void Gui::startGUI()
 		{
 			ImGui_ImplAllegro5_NewFrame();
 			ImGui::NewFrame();
-			{print_gui_setup(); }
+			print_gui_setup(); 
 			ImGui::Render();
 			al_draw_scaled_bitmap(background,
 				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
 				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			al_flip_display();
+			
+			if (!settingUp) {
+				cantTw = (cantTw == 0) ? 10 : cantTw;
+				my_client = Client(userTw.c_str(), cantTw);
+				if (my_client.GetToken()) {
+					my_client.GetTweets();
+					myLCD = make_unique<allegroLCD>();
+				}
+				
+			}
 		}
 		else
 		{
@@ -66,18 +76,11 @@ void Gui::startGUI()
 				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
 				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
 
+			
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
+			
 			al_flip_display();
-			cantTw = (cantTw == 0) ? 10 : cantTw;
-
-			if (firstTime) {
-				my_client = Client(userTw.c_str(), cantTw);
-				if (my_client.GetToken()) {
-					my_client.GetTweets();
-					myLCD = make_unique<allegroLCD>();
-				}
-				firstTime = false;
-			}
+			showTweet();
 
 		}
 		
@@ -148,6 +151,18 @@ void Gui::print_gui_controls() {
 	ImGui::End();
 }
 
+
+void Gui::showTweet() {
+
+	cursorPosition RealPos = myLCD->lcdGetCusorPosition();
+	cursorPosition DatePos = { 1,1 };
+
+	myLCD->lcdSetCursorPosition(DatePos);
+	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
+	
+	myLCD->lcdSetCursorPosition(RealPos);
+
+}
 bool Gui::AllegroInit()
 {
 	if (al_init())
