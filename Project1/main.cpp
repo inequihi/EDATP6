@@ -5,14 +5,14 @@ int main(void) {
 
 	Client client("lanacion", 10);
 
-	basicLCD* myptr=new allegroLCD;
+	//std::shared_ptr<basicLCD>my_lcd = make_shared<allegroLCD>();
 
 	if (client.GetToken()) {
 
 		client.GetTweets();
 		
-
+		
 	}
 
-	delete myptr;
+	
 }

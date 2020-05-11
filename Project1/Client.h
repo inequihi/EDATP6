@@ -8,18 +8,23 @@
 #include <string>
 #include"Tweet.h"
 #include <vector>
+#include <memory>
+#include "allegroLCD.h"
+
 
 using json = nlohmann::json;
 //Funciones auxiliares
 //void printNames(std::vector<Tweet> tweets);
 static size_t myCallback(void* contents, size_t size, size_t nmemb, void* userp);
 
+
+
 class Client {
 
 public:
 
 	Client(std::string usuario_,int nTweets_);
-	
+	void LoadTweets();
 	bool GetTweets();
 	bool GetToken();
 
@@ -40,6 +45,6 @@ private:
 	//std::vector<Tweet> tweets;
 	std::list<std::string> names;
 	std::string readString, token;
-
+	basicLCD* myLCD;
 	std::vector<Tweet> alltweets; 
 };

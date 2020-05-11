@@ -7,6 +7,7 @@ Client::Client(std::string usuario_, int nTweets_) {
 	usuario = usuario_;
 	numTweets = nTweets_;
 	query += usuario + "&count=" + std::to_string(numTweets) ; 
+	std::shared_ptr<basicLCD>my_lcd = make_shared<allegroLCD>();
 
 }
 
@@ -179,12 +180,23 @@ bool Client::GetTweets() {
 
 
 	getchar();
+
+	LoadTweets();
+
 	return 0;
 
 
 }
 
-//Funcion auxiliar para imprimir los tweets en pantalla una vez parseados
+void Client::LoadTweets() {
+
+
+
+
+
+}
+
+//Func09ion auxiliar para imprimir los tweets en pantalla una vez parseados
 void Client::printNames(std::vector<Tweet> tweets_)
 {
 	int i;
