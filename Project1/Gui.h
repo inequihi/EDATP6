@@ -21,10 +21,12 @@ public:
 
 
 protected:
-	void print_gui();
+	void print_gui_setup();
+	void print_gui_controls();
 	bool ImguiInit();
 	bool AllegroInit();
 	int cantTw;
+	int currentTweet;
 	string userTw;
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_BITMAP* background;
@@ -35,5 +37,7 @@ protected:
 	ImVec4 clear_color;
 	std::unique_ptr<basicLCD>myLCD;
 	Client my_client;
+	string currentTweetData;
+	string currentTweetDate;
 };
 

@@ -35,7 +35,6 @@ void Tweet::checkData() {
 	boost::replace_all(data,"¡", "");
 	boost::replace_all(data,"¿", "");
 
-
 }
 
 

@@ -2,13 +2,6 @@
 #include <string>
 #include  <boost/algorithm/string/replace.hpp>
 #define MAX_TWITTER_NAME 15
-#define Atilde 160
-#define Etilde 130
-#define Itilde 161
-#define Otilde 162
-#define Utilde 163
-#define enie 164
-#define ENIE 165
 
 using namespace std;
 

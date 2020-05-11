@@ -12,7 +12,7 @@ Gui::Gui()
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		settingUp = true;
 		close = false;
-
+		currentTweet = 0;
 	}
 	else
 		settingUp = false;
@@ -31,7 +31,6 @@ Gui::~Gui()
 
 void Gui::startGUI()
 {
-	close = false;
 	int times = 0;
 	bool firstTime = true;
 	do {
@@ -45,7 +44,7 @@ void Gui::startGUI()
 		{
 			ImGui_ImplAllegro5_NewFrame();
 			ImGui::NewFrame();
-			{print_gui(); }
+			{print_gui_setup(); }
 			ImGui::Render();
 			al_draw_scaled_bitmap(background,
 				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
@@ -59,7 +58,7 @@ void Gui::startGUI()
 			ImGui_ImplAllegro5_NewFrame();
 			ImGui::NewFrame();
 
-			//función de Gui de controles del led!!!!
+			print_gui_controls();
 
 			ImGui::Render();
 			al_set_target_backbuffer(display);
@@ -70,27 +69,25 @@ void Gui::startGUI()
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			al_flip_display();
 			cantTw = (cantTw == 0) ? 10 : cantTw;
+
 			if (firstTime) {
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 					my_client.GetTweets();
 					myLCD = make_unique<allegroLCD>();
-					*myLCD << reinterpret_cast<const unsigned char*> ("gegeg");
 				}
 				firstTime = false;
 			}
 
-			//my_client.TweetsToLCD(1); //ejemplo com primer tweet
 		}
 		
 	} while (!close);
 }
 
 
-void Gui::print_gui()
+void Gui::print_gui_setup()
 {	
 	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoTitleBar;
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
 
@@ -112,6 +109,43 @@ void Gui::print_gui()
 	}
 	ImGui::End();
 
+}
+
+void Gui::print_gui_controls() {
+
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+
+	ImGui::SetNextWindowPos(ImVec2(250, 50));
+	ImGui::SetNextWindowSize(ImVec2(150, 100));
+	ImGui::Begin("Seleccione usuario y la cantidad de twitts a buscar", 0, window_flags);
+	
+	if (ImGui::Button("Last tw"))
+	{
+		if (currentTweet > 0) {
+			currentTweet--;
+		}
+		else {
+			currentTweet = cantTw;
+		}
+		currentTweetData = my_client.returnTweet(currentTweet, cantTw);
+		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Next tw"))
+	{	
+		if (currentTweet < cantTw) {
+			currentTweet++;
+		}
+		else {
+			currentTweet = 0;
+		}
+		currentTweetData = my_client.returnTweet(currentTweet, cantTw);
+		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+	}
+
+	ImGui::End();
 }
 
 bool Gui::AllegroInit()

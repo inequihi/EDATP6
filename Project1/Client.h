@@ -27,6 +27,8 @@ public:
 	
 	bool GetTweets();
 	bool GetToken();
+	string returnTweet(int index, int cantTweets);
+	string returnDate(int index, int cantTweets);
 
 private:
 	void printTweets(std::vector<Tweet> tweets_);

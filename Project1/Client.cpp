@@ -218,3 +218,21 @@ static size_t myCallback(void* contents, size_t size, size_t nmemb, void* userp)
 	s->append(data, realsize);
 	return realsize;						//recordar siempre devolver realsize
 }
+
+string Client::returnTweet(int index, int cantTweets) {
+	if (index >= 0 && index < cantTweets) {
+		return alltweets[index].GetData();
+	}
+	else {
+		return alltweets[0].GetData();
+	}
+}
+
+string Client::returnDate(int index, int cantTweets) {
+	if (index >= 0 && index < cantTweets) {
+		return alltweets[index].GetFecha();
+	}
+	else {
+		return alltweets[0].GetFecha();
+	}
+}
