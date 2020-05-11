@@ -7,6 +7,7 @@
 #include <allegro5/allegro_primitives.h>
 #include "imgui_files/imgui.h"
 #include "imgui_files/imgui_impl_allegro5.h"
+#include <memory>
 
 #define SIZE_SCREEN_X 900
 #define SIZE_SCREEN_Y 300
@@ -29,7 +30,7 @@ protected:
 	ALLEGRO_BITMAP* background;
 	ALLEGRO_EVENT ev;
 	ALLEGRO_EVENT_QUEUE* queue;
-	bool running;
+	bool settingUp;
 	bool close;
 	ImVec4 clear_color;
 };

@@ -12,7 +12,7 @@ Client::Client(std::string usuario_, int nTweets_) {
 	usuario = usuario_;
 	numTweets = nTweets_;
 	query += usuario + "&count=" + std::to_string(numTweets) ; 
-	std::shared_ptr<basicLCD>my_lcd = make_shared<allegroLCD>();
+	my_lcd = make_shared<allegroLCD>();
 
 }
 

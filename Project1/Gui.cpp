@@ -10,11 +10,11 @@ Gui::Gui()
 		al_register_event_source(this->queue, al_get_mouse_event_source());
 		al_register_event_source(this->queue, al_get_keyboard_event_source());
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-		running = true;
+		settingUp = true;
 		close = false;
 	}
 	else
-		running = false;
+		settingUp = false;
 }
 
 
@@ -30,67 +30,80 @@ Gui::~Gui()
 
 void Gui::startGUI()
 {
-	while (!close)
-	{
-		if (running)
+	close = false;
+	int times = 0;
+	do {
+		while (al_get_next_event(queue, &ev)) {
+			ImGui_ImplAllegro5_ProcessEvent(&ev);
+			if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+				close = true;
+			}
+		}
+		if (settingUp)
 		{
-			print_gui();
+			ImGui_ImplAllegro5_NewFrame();
+			ImGui::NewFrame();
+			{print_gui(); }
+			ImGui::Render();
+			al_draw_scaled_bitmap(background,
+				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
+				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
+			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
+			al_flip_display();
 		}
 		else
 		{
 			// Ya tengo usuario -> uso CLIENT Y LED
+			ImGui_ImplAllegro5_NewFrame();
+			ImGui::NewFrame();
+
+			//función de Gui de controles del led!!!!
+
+			ImGui::Render();
+
 			al_draw_scaled_bitmap(background,
 				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
 				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
+
+			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			al_flip_display();
-			cantTw = (cantTw == 0) ? 10 : cantTw;
-			//std::shared_ptr<basicLCD>my_lcd = make_shared<allegroLCD>();
+			cantTw = (cantTw == 0) ? 10 : cantTw;	
 			Client client(userTw.c_str(), cantTw);
 			if (client.GetToken()) {
 				client.GetTweets();
 			}
 			//MANDAR TWEETS A LCD 
 		}
-
-	al_get_next_event(queue, &ev);
-	ImGui_ImplAllegro5_ProcessEvent(&ev);
-	if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-		close = true;
-	}
-
+		
+	} while (!close);
 }
 
+
 void Gui::print_gui()
-{
-	ImGui_ImplAllegro5_NewFrame();
-	ImGui::NewFrame();
+{	
+	ImGuiWindowFlags window_flags = 0;
+	window_flags |= ImGuiWindowFlags_NoTitleBar;
+	window_flags |= ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoResize;
+
 	ImGui::SetNextWindowPos(ImVec2(250, 50));
 	ImGui::SetNextWindowSize(ImVec2(450, 100));
 
-	ImGui::Begin("Seleccione usuario y la cantidad de twitts a buscar", NULL, 0);
+	ImGui::Begin("Seleccione usuario y la cantidad de twitts a buscar", 0, window_flags);
 	static char user[MAX_TWITTER_NAME];
 
-/*https://github.com/ocornut/imgui/issues/105*/
+    //https://github.com/ocornut/imgui/issues/105*/
 
 	ImGui::InputText("Usuario", user, sizeof(char) * MAX_TWITTER_NAME);
 
 	ImGui::SliderInt("Cantidad de Twitts", &cantTw, 1, 50);
 	if (ImGui::Button("Buscar"))
 	{
-		running = false;
+		settingUp = false;
 		userTw.assign(user);
 	}
 	ImGui::End();
 
-	// Rendering
-	ImGui::Render();
-
-	al_clear_to_color(al_map_rgba_f(clear_color.x, clear_color.y, clear_color.z, clear_color.w));
-
-
-	ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());	//Dibuja las ventanas, pero no hace al_flip_display()
-
-	al_flip_display();
 }
 
 bool Gui::AllegroInit()
