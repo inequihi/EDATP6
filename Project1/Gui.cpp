@@ -32,6 +32,7 @@ void Gui::startGUI()
 {
 	close = false;
 	int times = 0;
+	bool firstTime = true;
 	do {
 		while (al_get_next_event(queue, &ev)) {
 			ImGui_ImplAllegro5_ProcessEvent(&ev);
@@ -67,11 +68,17 @@ void Gui::startGUI()
 
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			al_flip_display();
-			cantTw = (cantTw == 0) ? 10 : cantTw;	
-			Client client(userTw.c_str(), cantTw);
-			if (client.GetToken()) {
-				client.GetTweets();
+			cantTw = (cantTw == 0) ? 10 : cantTw;
+			if (firstTime) {
+				my_client = Client(userTw.c_str(), cantTw);
+				if (my_client.GetToken()) {
+					my_client.GetTweets();
+					my_lcd = make_unique<allegroLCD>();
+					*my_lcd << reinterpret_cast<const unsigned char*> ("gegeg");
+				}
+				firstTime = false;
 			}
+
 			//MANDAR TWEETS A LCD 
 		}
 		

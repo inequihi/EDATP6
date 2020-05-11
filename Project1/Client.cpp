@@ -12,7 +12,6 @@ Client::Client(std::string usuario_, int nTweets_) {
 	usuario = usuario_;
 	numTweets = nTweets_;
 	query += usuario + "&count=" + std::to_string(numTweets) ; 
-	my_lcd = make_shared<allegroLCD>();
 
 }
 
@@ -184,10 +183,7 @@ bool Client::GetTweets() {
 		std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
 
 
-	getchar();
-
 	LoadTweets();
-
 	return 0;
 
 

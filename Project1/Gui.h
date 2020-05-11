@@ -33,5 +33,7 @@ protected:
 	bool settingUp;
 	bool close;
 	ImVec4 clear_color;
+	std::shared_ptr<basicLCD>my_lcd;
+	Client my_client;
 };
 

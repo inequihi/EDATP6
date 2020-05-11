@@ -47,5 +47,5 @@ private:
 	std::string readString, token;
 	basicLCD* myLCD;
 	std::vector<Tweet> alltweets; 
-	std::shared_ptr<basicLCD>my_lcd;
+
 };
