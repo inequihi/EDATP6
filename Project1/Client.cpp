@@ -84,6 +84,7 @@ bool Client::GetToken() {
 			//Si hubo algun error, se muestra el error que devuelve la libreria
 			std::cerr << e.what() << std::endl;
 			result= false;
+
 		}
 	}
 	else
@@ -124,7 +125,6 @@ bool Client::GetTweets() {
 				std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(codErr) << std::endl;
 				return 0;
 			}
-			//processstate= true;
 
 			std::cout << "....CARGANDO TWEETS POR FAVOR ESPERE...." << std::endl;
 		}

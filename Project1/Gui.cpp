@@ -13,9 +13,10 @@ Gui::Gui()
 		al_register_event_source(this->queue, al_get_timer_event_source(timer));
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		Cargando = "Cargando";  //aca meter los cambios para que se vayan agregando y sacando puntos para que simule que carga
-
+		newSearch = false;
 		settingUp = true;
 		close = false;
+		descargandoTweets = true;
 		currentTweet = 0;
 		currentPos = 0;
 	}
@@ -40,8 +41,7 @@ void Gui::startGUI()
 {
 	al_start_timer(timer);
 	int times = 0;
-	bool descargandoTweets = true;
-	
+
 	do {
 		int flag = 0;
 		while (al_get_next_event(queue, &ev)) {
@@ -82,20 +82,18 @@ void Gui::startGUI()
 						currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                ";
 						currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 					}
-					else{
+					else{						
 						myLCD->lcdClear();
 						myLCD->lcdSetCursorPosition({ 1,1 });
 						*myLCD << reinterpret_cast<const unsigned char*>("Error getting");
 						myLCD->lcdSetCursorPosition({ 2,1 });
 						*myLCD << reinterpret_cast<const unsigned char*>("Tweets");
-						close = true;
-						al_rest(2);
-					}
-
-					
-					
-				}
-				
+						//close = true;
+						settingUp = true;
+						newSearch = true;
+						//al_rest(2);
+					}				
+				}				
 			}
 		}
 		else
@@ -128,6 +126,12 @@ void Gui::startGUI()
 
 void Gui::print_gui_setup()
 {	
+	if (newSearch)
+	{
+		al_set_target_backbuffer(display);
+		descargandoTweets = true;
+
+	}
 	ImGuiWindowFlags window_flags = 0;
 	window_flags |= ImGuiWindowFlags_NoMove;
 	window_flags |= ImGuiWindowFlags_NoResize;
@@ -135,11 +139,8 @@ void Gui::print_gui_setup()
 	ImGui::SetNextWindowPos(ImVec2(250, 50));
 	ImGui::SetNextWindowSize(ImVec2(450, 100));
 
-	ImGui::Begin("Seleccione usuario y la cantidad de twitts a buscar", 0, window_flags);
+	ImGui::Begin("Seleccione usuario y la cantidad de twitts a buscar", 0, window_flags);	
 	static char user[MAX_TWITTER_NAME];
-
-    //https://github.com/ocornut/imgui/issues/105*/
-
 	ImGui::InputText("Usuario", user, sizeof(char) * MAX_TWITTER_NAME);
 
 	ImGui::SliderInt("Cantidad de Twitts", &cantTw, 1, 50);
@@ -147,6 +148,7 @@ void Gui::print_gui_setup()
 	{
 		settingUp = false;
 		userTw.assign(user);
+		std::cout << userTw << std::endl; //guarda bien nuevo usuaro
 	}
 	ImGui::End();
 }

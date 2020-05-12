@@ -37,6 +37,9 @@ protected:
 	ALLEGRO_TIMER* timer;
 	bool settingUp;
 	bool close;
+	bool newSearch;
+	bool descargandoTweets;
+
 	ImVec4 clear_color;
 	std::unique_ptr<basicLCD>myLCD;
 	Client my_client;
