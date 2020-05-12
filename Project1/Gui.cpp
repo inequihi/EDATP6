@@ -31,7 +31,7 @@ Gui::~Gui()
 
 	ImGui_ImplAllegro5_Shutdown();
 	ImGui::DestroyContext();
-	myLCD->~basicLCD();
+
 	if (timer_queue)
 		al_destroy_event_queue(timer_queue);
 	if(queue)
@@ -74,7 +74,7 @@ void Gui::startGUI()
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 
-					myLCD =new allegroLCD;
+					myLCD =make_unique<allegroLCD>();
 
 					while (descargandoTweets) {
 
