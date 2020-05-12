@@ -122,6 +122,7 @@ bool allegroLCD::lcdClearToEOL() {
 
 bool allegroLCD::refreshDisplay() {
 	al_set_target_backbuffer(display);
+	al_set_window_position(display,LED_POSITION_X,LED_POSITION_Y);
 	al_clear_to_color(al_color_name("black"));
 	al_draw_text(ledFont,
 		font_color, 50, 40, 0,
