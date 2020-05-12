@@ -9,12 +9,13 @@
 #include"Tweet.h"
 #include <vector>
 #include <memory>
-#include "allegroLCD.h"
 #include "boost/locale.hpp"
+
+//#include<boost/locale.hpp>
+
 #include <memory>
+
 using json = nlohmann::json;
-//Funciones auxiliares
-//void printTweets(std::vector<Tweet> tweets);
 static size_t myCallback(void* contents, size_t size, size_t nmemb, void* userp);
 
 
