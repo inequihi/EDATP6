@@ -5,8 +5,8 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <string>
-#define LED_POSITION_X 820
-#define LED_POSITION_Y 930
+#define LED_POSITION_X 650
+#define LED_POSITION_Y 450
 using namespace std;
 
 class allegroLCD : public basicLCD

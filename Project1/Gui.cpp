@@ -47,7 +47,7 @@ void Gui::startGUI()
 	int times = 0;
 
 	do {
-		int flag = 0;
+		
 		while (al_get_next_event(queue, &ev)) {
 			ImGui_ImplAllegro5_ProcessEvent(&ev);
 			if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
@@ -67,7 +67,7 @@ void Gui::startGUI()
 			al_flip_display();
 			
 			if (!settingUp) {
-				cantTw = (cantTw == 0) ? 10 : cantTw;
+				cantTw = (cantTw == 0) ? cantTw=10 : cantTw;
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 
@@ -80,7 +80,7 @@ void Gui::startGUI()
 					}
 					if (my_client.numberTweetsCollected()) {
 						currentPos = 0;
-						currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                ";
+						currentTweetData = my_client.returnTweet(currentTweet, cantTw) ;
 						currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 						al_start_timer(timer);
 					}
@@ -116,14 +116,7 @@ void Gui::startGUI()
 				showTweet();
 			}
 			
-			/*
-			al_get_next_event(timer_queue, &timerev);
-			ImGui_ImplAllegro5_ProcessEvent(&timerev);
-			if (timerev.type == ALLEGRO_EVENT_TIMER)
-			{
-				showTweet();;
-			}
-			*/
+			
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			
 			al_flip_display();
@@ -143,7 +136,7 @@ void Gui::print_gui_setup()
 
 	}
 	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoMove;
+	
 	window_flags |= ImGuiWindowFlags_NoResize;
 
 	ImGui::SetNextWindowPos(ImVec2(250, 50));
@@ -166,7 +159,7 @@ void Gui::print_gui_setup()
 void Gui::print_gui_controls() {
 
 	ImGuiWindowFlags window_flags = 0;
-	window_flags |= ImGuiWindowFlags_NoMove;
+	
 	window_flags |= ImGuiWindowFlags_NoResize;
 
 	ImGui::SetNextWindowPos(ImVec2(250, 50));
@@ -180,9 +173,8 @@ void Gui::print_gui_controls() {
 		}
 		else {
 			currentTweet = cantTw-1;
-		}
-		currentTweetData ="                "+ my_client.returnTweet(currentTweet, cantTw)+"                ";
-		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+		} my_client.returnTweet(currentTweet, cantTw);
+		currentTweetDate =  my_client.returnDate(currentTweet, cantTw) ;
 		showTweet();
 		currentPos = 0;
 	}
@@ -196,11 +188,12 @@ void Gui::print_gui_controls() {
 		else {
 			currentTweet = 0;
 		}
-		currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                ";
-		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+		currentTweetData = my_client.returnTweet(currentTweet, cantTw) ;
+		currentTweetDate = my_client.returnDate(currentTweet, cantTw) ;
 		showTweet();
 		currentPos = 0;
 	}
+	ImGui::Text("Tweet :%d/%d", currentTweet+1, cantTw);
 
 	ImGui::End();
 }
@@ -210,27 +203,44 @@ void Gui::showTweet() {
 
 	
 	cursorPosition DatePos = { 1,1 };
-	cursorPosition DataPos = { 2,1 };
-	
 
-	if (currentPos == currentTweetData.size()) {
 
+
+	if (currentPos < 16) {
+
+		cursorPosition DataPos = { 2,16 - currentPos };
+
+		myLCD->lcdClear();
+		myLCD->lcdSetCursorPosition(DatePos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
+
+		myLCD->lcdSetCursorPosition(DataPos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(0, (int)currentPos + 1).c_str()); 
+
+		currentPos++;
+	}
+	else if ((currentPos >= 16) && (currentPos <= (currentTweetData.size()))) {
+
+		cursorPosition DataPos = { 2, 1 };
+
+		myLCD->lcdClear();
+		myLCD->lcdSetCursorPosition(DatePos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
+
+		myLCD->lcdSetCursorPosition(DataPos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos, 16).c_str());
+
+		currentPos++;
+
+
+	}
+	else {
 		currentPos = 0;
 	}
 	
-
-	myLCD->lcdClear();
-	myLCD->lcdSetCursorPosition(DatePos);
-	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
-
-	myLCD->lcdSetCursorPosition(DataPos);
-	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos,16).c_str());
-
-	currentPos++;
-
 }
 
-void Gui::cargando() {
+void Gui::cargando() {					//cargando twwets
 	string dots = "";
 	string userTW = "@";
 	userTW.append(userTw);
@@ -248,7 +258,7 @@ void Gui::cargando() {
 			Cargando += ".";
 		else
 		{
-			Cargando.clear();			//CREO Q NO LO HACE
+			Cargando.clear();			          
 			Cargando.assign("Cargando");
 		}
 
@@ -301,6 +311,7 @@ bool Gui::ImguiInit(void)
 
 
 	display = al_create_display(SIZE_SCREEN_X, SIZE_SCREEN_Y);
+	al_set_window_position( display, 500 , 100); //posicion del menu
 	if (!display)
 		return false;
 
@@ -314,45 +325,3 @@ bool Gui::ImguiInit(void)
 
 	return true;
 }
-/*
-void Gui::showTweet() {
-
-
-	cursorPosition DatePos = { 1,1 };
-
-
-
-	if (currentPos < 16) {
-
-		cursorPosition DataPos = { 2,16 - currentPos };
-
-		myLCD->lcdClear();
-		myLCD->lcdSetCursorPosition(DatePos);
-		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
-
-		myLCD->lcdSetCursorPosition(DataPos);
-		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos, currentPos + 1).c_str());
-
-		currentPos++;
-	}
-	else if ((currentPos >= 16) && (currentPos <= (currentTweetData.size()))) {
-
-		cursorPosition DataPos = { 2, 1 };
-
-		myLCD->lcdClear();
-		myLCD->lcdSetCursorPosition(DatePos);
-		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
-
-		myLCD->lcdSetCursorPosition(DataPos);
-		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos, 16).c_str());
-
-		currentPos++;
-
-
-	}
-	else {
-		currentPos = 0;
-	}
-
-
-}*/

@@ -126,7 +126,7 @@ bool Client::GetTweets() {
 				return 0;
 			}
 
-			std::cout << "....CARGANDO TWEETS POR FAVOR ESPERE...." << std::endl;
+			
 		}
 		else
 		{

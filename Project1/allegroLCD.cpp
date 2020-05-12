@@ -24,7 +24,7 @@ allegroLCD::allegroLCD() {
 	}
 
 	display = al_create_display(600, 300);
-
+	al_set_window_position(display, LED_POSITION_X, LED_POSITION_Y);
 	if (!display) {
 		initError = true;
 		cout << "Couldn't create display (lcd emulation)" << endl;
@@ -122,7 +122,7 @@ bool allegroLCD::lcdClearToEOL() {
 
 bool allegroLCD::refreshDisplay() {
 	al_set_target_backbuffer(display);
-	al_set_window_position(display,LED_POSITION_X,LED_POSITION_Y);
+	
 	al_clear_to_color(al_color_name("black"));
 	al_draw_text(ledFont,
 		font_color, 50, 40, 0,
