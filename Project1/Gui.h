@@ -43,6 +43,8 @@ protected:
 	bool close;
 	bool newSearch;
 	bool descargandoTweets;
+	int myTicks;
+	int tickCount;
 
 	ImVec4 clear_color;
 	unique_ptr<basicLCD>myLCD;

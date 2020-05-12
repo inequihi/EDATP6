@@ -5,7 +5,7 @@ Gui::Gui()
 {
 	if (AllegroInit() && ImguiInit())
 	{
-		timer = al_create_timer(1/10.0);
+		timer = al_create_timer(1/60.0);
 		this->queue = al_create_event_queue();
 		this->timer_queue = al_create_event_queue();
 		al_register_event_source(this->queue, al_get_display_event_source(display));
@@ -20,6 +20,8 @@ Gui::Gui()
 		descargandoTweets = true;
 		currentTweet = 0;
 		currentPos = 0;
+		myTicks = 6;
+		tickCount = 0;
 	}
 	else
 		settingUp = false;
@@ -109,7 +111,14 @@ void Gui::startGUI()
 			//Evento timer nos indica que debemos imprimir los tweets
 			if (al_get_next_event(timer_queue, &timerev))
 			{
-				showTweet();
+				if (tickCount >= myTicks) {
+					showTweet();
+					tickCount = 0;
+				}
+				else {
+					tickCount++;
+				}
+
 			}
 			
 			al_set_target_backbuffer(display);
@@ -160,7 +169,7 @@ void Gui::print_gui_controls() {
 	window_flags |= ImGuiWindowFlags_NoResize;
 
 	ImGui::SetNextWindowPos(ImVec2(250, 50));
-	ImGui::SetNextWindowSize(ImVec2(150, 100));
+	ImGui::SetNextWindowSize(ImVec2(200, 100));
 	ImGui::Begin("Seleccione Tweet", 0, window_flags);
 	
 	if (ImGui::Button("Last tw"))
@@ -191,9 +200,36 @@ void Gui::print_gui_controls() {
 		showTweet();
 		currentPos = 0;
 	}
-	ImGui::Text("Tweet :%d/%d", currentTweet+1, cantTw);
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Restart Tweet"))
+	{
+		currentPos = 0;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("More Speed"))
+	{
+		if (myTicks < 9) {
+			myTicks -= 1;
+		}
+	}
+
+	if (ImGui::Button("Less Speed"))
+	{
+		if (myTicks>1) {
+			myTicks += 1;
+		}
+		
+	}
+
+	ImGui::Text("Tweet :%d/%d", currentTweet + 1, cantTw);
 
 	ImGui::End();
+
+	
 }
 
 
