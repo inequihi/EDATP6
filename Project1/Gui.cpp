@@ -5,7 +5,7 @@ Gui::Gui()
 {
 	if (AllegroInit() && ImguiInit())
 	{
-		timer = al_create_timer(100);
+		timer = al_create_timer(1/10.0);
 		this->queue = al_create_event_queue();
 		al_register_event_source(this->queue, al_get_display_event_source(display));
 		al_register_event_source(this->queue, al_get_mouse_event_source());
@@ -40,10 +40,14 @@ void Gui::startGUI()
 	int times = 0;
 	bool firstTime = true;
 	do {
+		int flag = 0;
 		while (al_get_next_event(queue, &ev)) {
 			ImGui_ImplAllegro5_ProcessEvent(&ev);
 			if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 				close = true;
+			}
+			if (ev.type == ALLEGRO_EVENT_TIMER) {
+				flag = 1;
 			}
 		}
 		if (settingUp)
@@ -63,7 +67,8 @@ void Gui::startGUI()
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 					my_client.GetTweets();
-					currentTweetData = my_client.returnTweet(currentTweet, cantTw);
+					currentPos = 0;
+					currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                " ;
 					currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 					myLCD = make_unique<allegroLCD>();
 					
@@ -89,7 +94,8 @@ void Gui::startGUI()
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			
 			al_flip_display();
-			if (ev.type == ALLEGRO_EVENT_TIMER) {
+			if (flag) {
+				cout << "Timer" << endl;
 				showTweet();
 			}
 
@@ -157,7 +163,7 @@ void Gui::print_gui_controls() {
 		else {
 			currentTweet = 0;
 		}
-		currentTweetData = my_client.returnTweet(currentTweet, cantTw);
+		currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                ";
 		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 		showTweet();
 		currentPos = 0;
@@ -171,6 +177,7 @@ void Gui::showTweet() {
 
 	
 	cursorPosition DatePos = { 1,1 };
+	cursorPosition DataPos = { 2,1 };
 	
 
 	if (currentPos == currentTweetData.size()) {
@@ -178,7 +185,7 @@ void Gui::showTweet() {
 		currentPos = 0;
 	}
 	
-	cursorPosition DataPos = { 2,1};
+
 	myLCD->lcdClear();
 	myLCD->lcdSetCursorPosition(DatePos);
 	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
@@ -187,8 +194,6 @@ void Gui::showTweet() {
 	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos,16).c_str());
 
 	currentPos++;
-
-
 
 }
 bool Gui::AllegroInit()
