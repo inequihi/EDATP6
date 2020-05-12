@@ -28,6 +28,7 @@ protected:
 	int cantTw;
 	int currentTweet;
 	int currentPos;
+	string Cargando;
 	string userTw;
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_BITMAP* background;

@@ -34,10 +34,12 @@ public:
 
 private:
 	void printTweets(std::vector<Tweet> tweets_);
+	void setopt(void);
 	json Jdata;
 	CURL* curl;					//Variable donde vamos a guardar las configuraciones de una transferencia
 	CURLM* multiHandle;			//Variable donde vamos a atachear los easy handles
 	CURLcode codErr;
+	CURLMcode codMErr;
 	std::string API_key = "HCB39Q15wIoH61KIkY5faRDf6";
 	std::string API_SecretKey = "7s8uvgQnJqjJDqA6JsLIFp90FcOaoR5Ic41LWyHOic0Ht3SRJ6";
 	std::string usuario = "";  
@@ -49,5 +51,6 @@ private:
 	std::string readString, token;
 	std::vector<Tweet> alltweets; 
 	int stillRunning;
+	bool estado;
 
 };

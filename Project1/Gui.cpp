@@ -12,6 +12,8 @@ Gui::Gui()
 		al_register_event_source(this->queue, al_get_keyboard_event_source());
 		al_register_event_source(this->queue, al_get_timer_event_source(timer));
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+		Cargando = "Cargando";  //aca meter los cambios para que se vayan agregando y sacando puntos para que simule que carga
+
 		settingUp = true;
 		close = false;
 		currentTweet = 0;
@@ -206,7 +208,7 @@ void Gui::showTweet() {
 }
 
 void Gui::cargando() {
-
+	string dots = "";
 	cursorPosition UserPos = { 1,1 };
 	myLCD->lcdSetCursorPosition(UserPos);
 	*myLCD << reinterpret_cast<const unsigned char*>(userTw.c_str());
@@ -215,9 +217,16 @@ void Gui::cargando() {
 	myLCD->lcdSetCursorPosition(LoadPos);
 	
 	static int ique = 0;
-	string Cargando = "Cargando ";  //aca meter los cambios para que se vayan agregando y sacando puntos para que simule que carga
+	if (!(ique % 50))
+	{
+		if (Cargando.size() < (size_t)16)
+			Cargando += ".";
+		else
+			Cargando.assign("Cargando");
+	}
 
 	*myLCD << reinterpret_cast<const unsigned char*>(Cargando.c_str());
+
 	ique++;
 
 }

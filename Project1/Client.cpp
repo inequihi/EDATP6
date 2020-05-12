@@ -98,11 +98,90 @@ bool Client::GetToken() {
 
 bool Client::GetTweets() {
 
+	static bool init = true;			//Inicializamos todo una sola vez
 	
+	if (init)
+	{
+		setopt();
+		init = false; 
+	}
+
+	estado = true;
+	if ((curl != NULL) & (multiHandle != NULL))
+	{
+		//Realizamos ahora un perform no bloqueante
+		curl_multi_perform(multiHandle, &stillRunning);
+		if (stillRunning)
+		{
+			//Debemos hacer polling de la transferencia hasta que haya terminado
+			codMErr = curl_multi_perform(multiHandle, &stillRunning);
+			if (codMErr != CURLE_OK)
+			{
+				//Cleanup 
+				curl_easy_cleanup(curl);
+				curl_multi_cleanup(multiHandle);
+				std::cout << "ERROR EN RECUPERACION DE TWEETS" << std::endl;
+				std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(codErr) << std::endl;
+				return 0;
+			}
+			//processstate= true;
+
+			std::cout << "....CARGANDO TWEETS POR FAVOR ESPERE...." << std::endl;
+		}
+		else
+		{
+			//Checkeamos errores
+			if (codErr != CURLE_OK)
+			{
+				std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(codErr) << std::endl;
+				//Hacemos un clean up de curl antes de salir.
+				curl_easy_cleanup(curl);
+				curl_multi_cleanup(multiHandle);
+				return 0;
+			}
+			//Cleanup  final 
+			curl_easy_cleanup(curl);
+			curl_multi_cleanup(multiHandle);
+			init = true;
+
+			//Si el request de CURL fue exitoso entonces twitter devuelve un JSON
+			//con toda la informacion de los tweets que le pedimos
+			Jdata = json::parse(readString);
+
+			try
+			{
+				//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
+				for (auto element : Jdata)
+				{
+					string data = boost::locale::conv::from_utf <char>(element["text"], "ISO-8859-15");
+					string fecha = boost::locale::conv::from_utf <char>(element["created_at"], "ISO-8859-15");
+
+					Tweet tempTweet(fecha, data, usuario);
+					tempTweet.checkData();
+					alltweets.push_back(tempTweet);
+				}
+			}
+			catch (std::exception& e)
+			{
+				//Muestro si hubo un error de la libreria
+				std::cerr << e.what() << std::endl;
+			}
+			estado = false;
+		}
+		return estado;
+	}
+	else
+		std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
+	return 0;
+}
+
+void Client::setopt(void)
+{
 	curl = curl_easy_init();
 	multiHandle = curl_multi_init();
 	readString = "";
 	int stillRunning = 0;
+
 	if ((curl != NULL) & (multiHandle != NULL))
 	{
 		//Attacheo el easy handle para manejar una coneccion no bloqueante.
@@ -124,65 +203,9 @@ bool Client::GetTweets() {
 		//Seteamos los callback igual que antes
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, myCallback);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readString);
-
-		//Realizamos ahora un perform no bloqueante
-		curl_multi_perform(multiHandle, &stillRunning);
-		while (stillRunning)
-		{
-			//Debemos hacer polling de la transferencia hasta que haya terminado
-			curl_multi_perform(multiHandle, &stillRunning);
-			cout << "....CARGANDO TWEETS POR FAVOR ESPERE...." << endl;
-
-		}
-
-		//Checkeamos errores
-		if (codErr != CURLE_OK)
-		{
-			std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(codErr) << std::endl;
-			//Hacemos un clean up de curl antes de salir.
-			curl_easy_cleanup(curl);
-			curl_multi_cleanup(multiHandle);
-			return 0;
-		}
-
-		//Cleanup 
-		curl_easy_cleanup(curl);
-		curl_multi_cleanup(multiHandle);
-
-		//Si el request de CURL fue exitoso entonces twitter devuelve un JSON
-		//con toda la informacion de los tweets que le pedimos
-		Jdata = json::parse(readString);
-		try
-		{	
-			//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
-			for (auto element : Jdata)
-			{
-				string data = boost::locale::conv::from_utf <char>(element["text"],"ISO-8859-15" );
-				string fecha= boost::locale::conv::from_utf <char>(element["created_at"], "ISO-8859-15");
-
-				Tweet tempTweet(fecha,data,usuario);
-				tempTweet.checkData();
-				alltweets.push_back(tempTweet);
-			}
-				
-			//std::cout << "Tweets retrieved from Twitter account: " << std::endl;
-			//printTweets(alltweets);
-		}
-		catch (std::exception& e)
-		{
-			//Muestro si hubo un error de la libreria
-			std::cerr << e.what() << std::endl;
-		}
 	}
-	else
-		std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
-
-
-	return 0;
-
 
 }
-
 //Funcion auxiliar para imprimir los tweets en pantalla una vez parseados
 void Client::printTweets(std::vector<Tweet> tweets_)
 {
