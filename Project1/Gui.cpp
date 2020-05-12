@@ -209,25 +209,30 @@ void Gui::showTweet() {
 
 void Gui::cargando() {
 	string dots = "";
+	string userTW = "@";
+	userTW.append(userTw);
 	cursorPosition UserPos = { 1,1 };
 	myLCD->lcdSetCursorPosition(UserPos);
-	*myLCD << reinterpret_cast<const unsigned char*>(userTw.c_str());
+	*myLCD << reinterpret_cast<const unsigned char*>(userTW.c_str());
 
 	cursorPosition LoadPos = { 2,1 };
 	myLCD->lcdSetCursorPosition(LoadPos);
 	
-	static int ique = 0;
-	if (!(ique % 50))
+	static int counter = 0;
+	if (!(counter % 50))
 	{
 		if (Cargando.size() < (size_t)16)
 			Cargando += ".";
 		else
+		{
+			Cargando.clear();			//CREO Q NO LO HACE
 			Cargando.assign("Cargando");
-	}
+		}
 
+	}
 	*myLCD << reinterpret_cast<const unsigned char*>(Cargando.c_str());
 
-	ique++;
+	counter++;
 
 }
 bool Gui::AllegroInit()
