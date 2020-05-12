@@ -248,3 +248,7 @@ string Client::returnDate(int index, int cantTweets) {
 		return alltweets[0].GetFecha();
 	}
 }
+
+int Client::numberTweetsCollected() {
+	return alltweets.size();
+}

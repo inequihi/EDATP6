@@ -77,9 +77,21 @@ void Gui::startGUI()
 						cargando();
 						descargandoTweets=my_client.GetTweets();
 					}
-					currentPos = 0;
-					currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                " ;
-					currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+					if (my_client.numberTweetsCollected()) {
+						currentPos = 0;
+						currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                ";
+						currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+					}
+					else{
+						myLCD->lcdClear();
+						myLCD->lcdSetCursorPosition({ 1,1 });
+						*myLCD << reinterpret_cast<const unsigned char*>("Error getting");
+						myLCD->lcdSetCursorPosition({ 2,1 });
+						*myLCD << reinterpret_cast<const unsigned char*>("Tweets");
+						close = true;
+						al_rest(2);
+					}
+
 					
 					
 				}
@@ -105,7 +117,6 @@ void Gui::startGUI()
 			
 			al_flip_display();
 			if (flag) {
-				cout << "Timer" << endl;
 				showTweet();
 			}
 

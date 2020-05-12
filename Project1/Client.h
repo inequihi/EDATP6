@@ -30,6 +30,7 @@ public:
 	bool GetToken();
 	string returnTweet(int index, int cantTweets);
 	string returnDate(int index, int cantTweets);
+	int numberTweetsCollected();
 	
 
 private:
