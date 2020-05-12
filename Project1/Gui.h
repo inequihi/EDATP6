@@ -43,7 +43,7 @@ protected:
 	bool descargandoTweets;
 
 	ImVec4 clear_color;
-	std::unique_ptr<basicLCD>myLCD;
+	basicLCD * myLCD;
 	Client my_client;
 	string currentTweetData;
 	string currentTweetDate;

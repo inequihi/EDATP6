@@ -31,6 +31,7 @@ Gui::~Gui()
 
 	ImGui_ImplAllegro5_Shutdown();
 	ImGui::DestroyContext();
+	myLCD->~basicLCD();
 	if (timer_queue)
 		al_destroy_event_queue(timer_queue);
 	if(queue)
@@ -39,6 +40,8 @@ Gui::~Gui()
 		al_destroy_display(display);
 	if (timer)
 		al_destroy_timer(timer);
+	
+	
 }
 
 void Gui::startGUI()
@@ -71,7 +74,7 @@ void Gui::startGUI()
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
 
-					myLCD = make_unique<allegroLCD>();
+					myLCD =new allegroLCD;
 
 					while (descargandoTweets) {
 
@@ -116,7 +119,7 @@ void Gui::startGUI()
 				showTweet();
 			}
 			
-			
+			al_set_target_backbuffer(display);
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			
 			al_flip_display();
@@ -124,6 +127,7 @@ void Gui::startGUI()
 		}
 		
 	} while (!close);
+	
 }
 
 
@@ -164,7 +168,7 @@ void Gui::print_gui_controls() {
 
 	ImGui::SetNextWindowPos(ImVec2(250, 50));
 	ImGui::SetNextWindowSize(ImVec2(150, 100));
-	ImGui::Begin("Seleccione usuario y la cantidad de twitts a buscar", 0, window_flags);
+	ImGui::Begin("Seleccione Tweet", 0, window_flags);
 	
 	if (ImGui::Button("Last tw"))
 	{
