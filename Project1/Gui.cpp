@@ -28,16 +28,17 @@ Gui::Gui()
 
 Gui::~Gui()
 {
+
+	ImGui_ImplAllegro5_Shutdown();
+	ImGui::DestroyContext();
+	if (timer_queue)
+		al_destroy_event_queue(timer_queue);
+	if(queue)
+		al_destroy_event_queue(queue);
 	if (display)
 		al_destroy_display(display);
 	if (timer)
 		al_destroy_timer(timer);
-	if(queue)
-		al_destroy_event_queue(queue);
-	if(timer_queue)
-		al_destroy_event_queue(timer_queue);
-	ImGui_ImplAllegro5_Shutdown();
-	ImGui::DestroyContext();
 }
 
 void Gui::startGUI()
