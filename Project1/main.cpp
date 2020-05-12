@@ -3,7 +3,7 @@
 int main(void) {
 
 	
-	IOinterfase TwitterProgram;
+	Gui TwitterProgram;
 	TwitterProgram.startGUI();
 
 	return 0;

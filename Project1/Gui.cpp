@@ -1,7 +1,7 @@
 #include "Gui.h"
 
 
-IOinterfase::IOinterfase()
+Gui::Gui()
 {
 	if (AllegroInit() && ImguiInit())
 	{
@@ -26,7 +26,7 @@ IOinterfase::IOinterfase()
 }
 
 
-IOinterfase::~IOinterfase()
+Gui::~Gui()
 {
 
 	ImGui_ImplAllegro5_Shutdown();
@@ -44,7 +44,7 @@ IOinterfase::~IOinterfase()
 	
 }
 
-void IOinterfase::startGUI()
+void Gui::startGUI()
 {
 
 	int times = 0;
@@ -82,7 +82,7 @@ void IOinterfase::startGUI()
 					}
 					if (my_client.numberTweetsCollected()) {
 						currentPos = 0;
-						currentTweetData = my_client.returnTweet(currentTweet, cantTw) ;
+						currentTweetData = "                   " + my_client.returnTweet(currentTweet, cantTw) + "                ";
 						currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 						al_start_timer(timer);
 					}
@@ -124,7 +124,7 @@ void IOinterfase::startGUI()
 }
 
 
-void IOinterfase::print_gui_setup()
+void Gui::print_gui_setup()
 {	
 	if (newSearch)
 	{
@@ -153,7 +153,7 @@ void IOinterfase::print_gui_setup()
 	ImGui::End();
 }
 
-void IOinterfase::print_gui_controls() {
+void Gui::print_gui_controls() {
 
 	ImGuiWindowFlags window_flags = 0;
 	
@@ -170,7 +170,8 @@ void IOinterfase::print_gui_controls() {
 		}
 		else {
 			currentTweet = cantTw-1;
-		} my_client.returnTweet(currentTweet, cantTw);
+		} 
+		currentTweetData = "                   " + my_client.returnTweet(currentTweet, cantTw) + "                ";
 		currentTweetDate =  my_client.returnDate(currentTweet, cantTw) ;
 		showTweet();
 		currentPos = 0;
@@ -185,8 +186,8 @@ void IOinterfase::print_gui_controls() {
 		else {
 			currentTweet = 0;
 		}
-		currentTweetData = my_client.returnTweet(currentTweet, cantTw) ;
-		currentTweetDate = my_client.returnDate(currentTweet, cantTw) ;
+		currentTweetData = "                   " + my_client.returnTweet(currentTweet, cantTw) + "                ";
+		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 		showTweet();
 		currentPos = 0;
 	}
@@ -196,27 +197,14 @@ void IOinterfase::print_gui_controls() {
 }
 
 
-void IOinterfase::showTweet() {
+void Gui::showTweet() {
 
 	
 	cursorPosition DatePos = { 1,1 };
 
 
 
-	if (currentPos < 16) {
-
-		cursorPosition DataPos = { 2,16 - currentPos };
-
-		myLCD->lcdClear();
-		myLCD->lcdSetCursorPosition(DatePos);
-		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
-
-		myLCD->lcdSetCursorPosition(DataPos);
-		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(0, (int)currentPos + 1).c_str()); 
-
-		currentPos++;
-	}
-	else if ((currentPos >= 16) && (currentPos <= (currentTweetData.size()))) {
+	if ((currentPos <= (currentTweetData.size()-16))) {
 
 		cursorPosition DataPos = { 2, 1 };
 
@@ -237,7 +225,7 @@ void IOinterfase::showTweet() {
 	
 }
 
-void IOinterfase::cargando() {					//cargando twwets
+void Gui::cargando() {					//cargando twwets
 	string dots = "";
 	string userTW = "@";
 	userTW.append(userTw);
@@ -266,7 +254,7 @@ void IOinterfase::cargando() {					//cargando twwets
 
 }
 
-void IOinterfase::errorMessage() {
+void Gui::errorMessage() {
 	myLCD->lcdClear();
 	myLCD->lcdSetCursorPosition({ 1,1 });
 	*myLCD << reinterpret_cast<const unsigned char*>("Error getting");
@@ -275,7 +263,7 @@ void IOinterfase::errorMessage() {
 	settingUp = true;
 	newSearch = true;
 }
-bool IOinterfase::AllegroInit()
+bool Gui::AllegroInit()
 {
 	if (al_init())
 	{
@@ -308,7 +296,7 @@ bool IOinterfase::AllegroInit()
 }
 
 
-bool IOinterfase::ImguiInit(void)
+bool Gui::ImguiInit(void)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
