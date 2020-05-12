@@ -77,7 +77,6 @@ void Gui::startGUI()
 					myLCD =make_unique<allegroLCD>();
 
 					while (descargandoTweets) {
-
 						cargando();
 						descargandoTweets=my_client.GetTweets();
 					}
@@ -88,13 +87,7 @@ void Gui::startGUI()
 						al_start_timer(timer);
 					}
 					else{						
-						myLCD->lcdClear();
-						myLCD->lcdSetCursorPosition({ 1,1 });
-						*myLCD << reinterpret_cast<const unsigned char*>("Error getting");
-						myLCD->lcdSetCursorPosition({ 2,1 });
-						*myLCD << reinterpret_cast<const unsigned char*>("Tweets");
-						settingUp = true;
-						newSearch = true;
+						errorMessage();
 					}				
 				}				
 			}
@@ -271,6 +264,16 @@ void Gui::cargando() {					//cargando twwets
 
 	counter++;
 
+}
+
+void Gui::errorMessage() {
+	myLCD->lcdClear();
+	myLCD->lcdSetCursorPosition({ 1,1 });
+	*myLCD << reinterpret_cast<const unsigned char*>("Error getting");
+	myLCD->lcdSetCursorPosition({ 2,1 });
+	*myLCD << reinterpret_cast<const unsigned char*>("Tweets");
+	settingUp = true;
+	newSearch = true;
 }
 bool Gui::AllegroInit()
 {

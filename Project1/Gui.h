@@ -17,10 +17,12 @@ public:
 	Gui();
 	~Gui();
 	void startGUI();
-	void showTweet();
-	void cargando();
+
 
 protected:
+	void showTweet();
+	void cargando();
+	void errorMessage();
 	void print_gui_setup();
 	void print_gui_controls();
 	bool ImguiInit();
