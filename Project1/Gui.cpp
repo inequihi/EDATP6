@@ -5,7 +5,7 @@ Gui::Gui()
 {
 	if (AllegroInit() && ImguiInit())
 	{
-		timer = al_create_timer(1 / 30.0);
+		timer = al_create_timer(100);
 		this->queue = al_create_event_queue();
 		al_register_event_source(this->queue, al_get_display_event_source(display));
 		al_register_event_source(this->queue, al_get_mouse_event_source());
@@ -15,6 +15,7 @@ Gui::Gui()
 		settingUp = true;
 		close = false;
 		currentTweet = 0;
+		currentPos = 0;
 	}
 	else
 		settingUp = false;
@@ -65,6 +66,7 @@ void Gui::startGUI()
 					currentTweetData = my_client.returnTweet(currentTweet, cantTw);
 					currentTweetDate = my_client.returnDate(currentTweet, cantTw);
 					myLCD = make_unique<allegroLCD>();
+					
 				}
 				
 			}
@@ -140,20 +142,25 @@ void Gui::print_gui_controls() {
 		else {
 			currentTweet = cantTw;
 		}
-		currentTweetData = my_client.returnTweet(currentTweet, cantTw);
+		currentTweetData ="                "+ my_client.returnTweet(currentTweet, cantTw)+"                ";
 		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+		showTweet();
+		currentPos = 0;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Next tw"))
 	{	
 		if (currentTweet < cantTw) {
 			currentTweet++;
+			
 		}
 		else {
 			currentTweet = 0;
 		}
 		currentTweetData = my_client.returnTweet(currentTweet, cantTw);
 		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+		showTweet();
+		currentPos = 0;
 	}
 
 	ImGui::End();
@@ -162,12 +169,26 @@ void Gui::print_gui_controls() {
 
 void Gui::showTweet() {
 
-	cursorPosition RealPos = myLCD->lcdGetCusorPosition();
+	
 	cursorPosition DatePos = { 1,1 };
+	
 
+	if (currentPos == currentTweetData.size()) {
+
+		currentPos = 0;
+	}
+	
+	cursorPosition DataPos = { 2,1};
+	myLCD->lcdClear();
 	myLCD->lcdSetCursorPosition(DatePos);
-	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.c_str());
-	myLCD->lcdSetCursorPosition(RealPos);
+	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
+
+	myLCD->lcdSetCursorPosition(DataPos);
+	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos,16).c_str());
+
+	currentPos++;
+
+
 
 }
 bool Gui::AllegroInit()
@@ -226,3 +247,45 @@ bool Gui::ImguiInit(void)
 
 	return true;
 }
+/*
+void Gui::showTweet() {
+
+
+	cursorPosition DatePos = { 1,1 };
+
+
+
+	if (currentPos < 16) {
+
+		cursorPosition DataPos = { 2,16 - currentPos };
+
+		myLCD->lcdClear();
+		myLCD->lcdSetCursorPosition(DatePos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
+
+		myLCD->lcdSetCursorPosition(DataPos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos, currentPos + 1).c_str());
+
+		currentPos++;
+	}
+	else if ((currentPos >= 16) && (currentPos <= (currentTweetData.size()))) {
+
+		cursorPosition DataPos = { 2, 1 };
+
+		myLCD->lcdClear();
+		myLCD->lcdSetCursorPosition(DatePos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetDate.c_str());
+
+		myLCD->lcdSetCursorPosition(DataPos);
+		*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos, 16).c_str());
+
+		currentPos++;
+
+
+	}
+	else {
+		currentPos = 0;
+	}
+
+
+}*/

@@ -27,6 +27,7 @@ protected:
 	bool AllegroInit();
 	int cantTw;
 	int currentTweet;
+	int currentPos;
 	string userTw;
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_BITMAP* background;
