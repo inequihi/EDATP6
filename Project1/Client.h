@@ -30,6 +30,7 @@ public:
 	bool GetToken();
 	string returnTweet(int index, int cantTweets);
 	string returnDate(int index, int cantTweets);
+	
 
 private:
 	void printTweets(std::vector<Tweet> tweets_);
@@ -47,5 +48,6 @@ private:
 	std::list<std::string> names;
 	std::string readString, token;
 	std::vector<Tweet> alltweets; 
+	int stillRunning;
 
 };

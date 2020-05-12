@@ -18,6 +18,7 @@ public:
 	~Gui();
 	void startGUI();
 	void showTweet();
+	void cargando();
 
 protected:
 	void print_gui_setup();

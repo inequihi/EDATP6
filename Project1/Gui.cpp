@@ -38,7 +38,8 @@ void Gui::startGUI()
 {
 	al_start_timer(timer);
 	int times = 0;
-	bool firstTime = true;
+	bool descargandoTweets = true;
+	
 	do {
 		int flag = 0;
 		while (al_get_next_event(queue, &ev)) {
@@ -66,11 +67,18 @@ void Gui::startGUI()
 				cantTw = (cantTw == 0) ? 10 : cantTw;
 				my_client = Client(userTw.c_str(), cantTw);
 				if (my_client.GetToken()) {
-					my_client.GetTweets();
+
+					myLCD = make_unique<allegroLCD>();
+
+					while (descargandoTweets) {
+
+						cargando();
+						descargandoTweets=my_client.GetTweets();
+					}
 					currentPos = 0;
 					currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                " ;
 					currentTweetDate = my_client.returnDate(currentTweet, cantTw);
-					myLCD = make_unique<allegroLCD>();
+					
 					
 				}
 				
@@ -146,7 +154,7 @@ void Gui::print_gui_controls() {
 			currentTweet--;
 		}
 		else {
-			currentTweet = cantTw;
+			currentTweet = cantTw-1;
 		}
 		currentTweetData ="                "+ my_client.returnTweet(currentTweet, cantTw)+"                ";
 		currentTweetDate = my_client.returnDate(currentTweet, cantTw);
@@ -156,7 +164,7 @@ void Gui::print_gui_controls() {
 	ImGui::SameLine();
 	if (ImGui::Button("Next tw"))
 	{	
-		if (currentTweet < cantTw) {
+		if (currentTweet < (cantTw-1)) {
 			currentTweet++;
 			
 		}
@@ -194,6 +202,23 @@ void Gui::showTweet() {
 	*myLCD << reinterpret_cast<const unsigned char*>(currentTweetData.substr(currentPos,16).c_str());
 
 	currentPos++;
+
+}
+
+void Gui::cargando() {
+
+	cursorPosition UserPos = { 1,1 };
+	myLCD->lcdSetCursorPosition(UserPos);
+	*myLCD << reinterpret_cast<const unsigned char*>(userTw.c_str());
+
+	cursorPosition LoadPos = { 2,1 };
+	myLCD->lcdSetCursorPosition(LoadPos);
+	
+	static int ique = 0;
+	string Cargando = "Cargando ";  //aca meter los cambios para que se vayan agregando y sacando puntos para que simule que carga
+
+	*myLCD << reinterpret_cast<const unsigned char*>(Cargando.c_str());
+	ique++;
 
 }
 bool Gui::AllegroInit()
