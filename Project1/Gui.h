@@ -34,6 +34,8 @@ protected:
 	ALLEGRO_BITMAP* background;
 	ALLEGRO_EVENT ev;
 	ALLEGRO_EVENT_QUEUE* queue;
+	ALLEGRO_EVENT_QUEUE* timer_queue;
+	ALLEGRO_EVENT timerev;
 	ALLEGRO_TIMER* timer;
 	bool settingUp;
 	bool close;

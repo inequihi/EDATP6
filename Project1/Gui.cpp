@@ -7,10 +7,11 @@ Gui::Gui()
 	{
 		timer = al_create_timer(1/10.0);
 		this->queue = al_create_event_queue();
+		this->timer_queue = al_create_event_queue();
 		al_register_event_source(this->queue, al_get_display_event_source(display));
 		al_register_event_source(this->queue, al_get_mouse_event_source());
 		al_register_event_source(this->queue, al_get_keyboard_event_source());
-		al_register_event_source(this->queue, al_get_timer_event_source(timer));
+		al_register_event_source(this->timer_queue, al_get_timer_event_source(timer));
 		clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 		Cargando = "Cargando";  //aca meter los cambios para que se vayan agregando y sacando puntos para que simule que carga
 		newSearch = false;
@@ -27,8 +28,6 @@ Gui::Gui()
 
 Gui::~Gui()
 {
-//	if (background)
-	//	al_destroy_bitmap(background);
 	if (display)
 		al_destroy_display(display);
 	if (timer)
@@ -39,18 +38,19 @@ Gui::~Gui()
 
 void Gui::startGUI()
 {
-	al_start_timer(timer);
+
 	int times = 0;
 
 	do {
 		int flag = 0;
-		while (al_get_next_event(queue, &ev)) {
+		while (al_get_next_event(queue, &ev) || al_get_next_event(timer_queue, &timerev)) {
 			ImGui_ImplAllegro5_ProcessEvent(&ev);
 			if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 				close = true;
 			}
-			if (ev.type == ALLEGRO_EVENT_TIMER) {
-				flag = 1;
+			ImGui_ImplAllegro5_ProcessEvent(&timerev);
+			if (timerev.type == ALLEGRO_EVENT_TIMER) {
+				showTweet();
 			}
 		}
 		if (settingUp)
@@ -81,6 +81,7 @@ void Gui::startGUI()
 						currentPos = 0;
 						currentTweetData = "                " + my_client.returnTweet(currentTweet, cantTw) + "                ";
 						currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+						al_start_timer(timer);
 					}
 					else{						
 						myLCD->lcdClear();
@@ -88,10 +89,8 @@ void Gui::startGUI()
 						*myLCD << reinterpret_cast<const unsigned char*>("Error getting");
 						myLCD->lcdSetCursorPosition({ 2,1 });
 						*myLCD << reinterpret_cast<const unsigned char*>("Tweets");
-						//close = true;
 						settingUp = true;
 						newSearch = true;
-						//al_rest(2);
 					}				
 				}				
 			}
@@ -114,9 +113,7 @@ void Gui::startGUI()
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			
 			al_flip_display();
-			if (flag) {
-				showTweet();
-			}
+
 
 		}
 		
