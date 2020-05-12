@@ -1,7 +1,7 @@
 #include "Gui.h"
 
 
-Gui::Gui()
+IOinterfase::IOinterfase()
 {
 	if (AllegroInit() && ImguiInit())
 	{
@@ -26,7 +26,7 @@ Gui::Gui()
 }
 
 
-Gui::~Gui()
+IOinterfase::~IOinterfase()
 {
 
 	ImGui_ImplAllegro5_Shutdown();
@@ -44,7 +44,7 @@ Gui::~Gui()
 	
 }
 
-void Gui::startGUI()
+void IOinterfase::startGUI()
 {
 
 	int times = 0;
@@ -124,7 +124,7 @@ void Gui::startGUI()
 }
 
 
-void Gui::print_gui_setup()
+void IOinterfase::print_gui_setup()
 {	
 	if (newSearch)
 	{
@@ -153,7 +153,7 @@ void Gui::print_gui_setup()
 	ImGui::End();
 }
 
-void Gui::print_gui_controls() {
+void IOinterfase::print_gui_controls() {
 
 	ImGuiWindowFlags window_flags = 0;
 	
@@ -196,7 +196,7 @@ void Gui::print_gui_controls() {
 }
 
 
-void Gui::showTweet() {
+void IOinterfase::showTweet() {
 
 	
 	cursorPosition DatePos = { 1,1 };
@@ -237,7 +237,7 @@ void Gui::showTweet() {
 	
 }
 
-void Gui::cargando() {					//cargando twwets
+void IOinterfase::cargando() {					//cargando twwets
 	string dots = "";
 	string userTW = "@";
 	userTW.append(userTw);
@@ -266,7 +266,7 @@ void Gui::cargando() {					//cargando twwets
 
 }
 
-void Gui::errorMessage() {
+void IOinterfase::errorMessage() {
 	myLCD->lcdClear();
 	myLCD->lcdSetCursorPosition({ 1,1 });
 	*myLCD << reinterpret_cast<const unsigned char*>("Error getting");
@@ -275,7 +275,7 @@ void Gui::errorMessage() {
 	settingUp = true;
 	newSearch = true;
 }
-bool Gui::AllegroInit()
+bool IOinterfase::AllegroInit()
 {
 	if (al_init())
 	{
@@ -308,7 +308,7 @@ bool Gui::AllegroInit()
 }
 
 
-bool Gui::ImguiInit(void)
+bool IOinterfase::ImguiInit(void)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();

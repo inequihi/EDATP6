@@ -11,11 +11,11 @@
 #define SIZE_SCREEN_X 900
 #define SIZE_SCREEN_Y 300
 
-class Gui
+class IOinterfase
 {
 public:
-	Gui();
-	~Gui();
+	IOinterfase();
+	~IOinterfase();
 	void startGUI();
 
 
