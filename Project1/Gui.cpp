@@ -32,6 +32,10 @@ Gui::~Gui()
 		al_destroy_display(display);
 	if (timer)
 		al_destroy_timer(timer);
+	if(queue)
+		al_destroy_event_queue(queue);
+	if(timer_queue)
+		al_destroy_event_queue(timer_queue);
 	ImGui_ImplAllegro5_Shutdown();
 	ImGui::DestroyContext();
 }
@@ -43,14 +47,10 @@ void Gui::startGUI()
 
 	do {
 		int flag = 0;
-		while (al_get_next_event(queue, &ev) || al_get_next_event(timer_queue, &timerev)) {
+		while (al_get_next_event(queue, &ev)) {
 			ImGui_ImplAllegro5_ProcessEvent(&ev);
 			if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
 				close = true;
-			}
-			ImGui_ImplAllegro5_ProcessEvent(&timerev);
-			if (timerev.type == ALLEGRO_EVENT_TIMER) {
-				showTweet();
 			}
 		}
 		if (settingUp)
@@ -109,11 +109,23 @@ void Gui::startGUI()
 				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
 				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
 
+			//Evento timer nos indica que debemos imprimir los tweets
+			if (al_get_next_event(timer_queue, &timerev))
+			{
+				showTweet();
+			}
 			
+			/*
+			al_get_next_event(timer_queue, &timerev);
+			ImGui_ImplAllegro5_ProcessEvent(&timerev);
+			if (timerev.type == ALLEGRO_EVENT_TIMER)
+			{
+				showTweet();;
+			}
+			*/
 			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 			
 			al_flip_display();
-
 
 		}
 		

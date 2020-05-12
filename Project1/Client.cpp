@@ -233,7 +233,7 @@ static size_t myCallback(void* contents, size_t size, size_t nmemb, void* userp)
 
 string Client::returnTweet(int index, int cantTweets) {
 	if (index >= 0 && index < cantTweets) {
-		return alltweets[index].GetData();
+		return "@" + alltweets[index].GetData();
 	}
 	else {
 		return alltweets[0].GetData();
