@@ -5,6 +5,7 @@ Client::Client()
 	usuario = "";
 	numTweets = 0;
 	query = "";
+	//setopt();
 }
 
 
@@ -14,6 +15,7 @@ Client::Client(std::string usuario_, int nTweets_) {
 	usuario = usuario_;
 	numTweets = nTweets_;
 	query += usuario + "&count=" + std::to_string(numTweets) ; 
+	//setopt();
 }
 
 bool Client::GetToken() {
@@ -126,7 +128,7 @@ bool Client::GetTweets() {
 				return 0;
 			}
 
-			
+
 		}
 		else
 		{

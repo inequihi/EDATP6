@@ -51,84 +51,87 @@ void Gui::startGUI()
 
 	int times = 0;
 
-	do {
+	if (settingUp) {
+
+		do {
 		
-		while (al_get_next_event(queue, &ev)) {
-			ImGui_ImplAllegro5_ProcessEvent(&ev);
-			if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
-				close = true;
+			while (al_get_next_event(queue, &ev)) {
+				ImGui_ImplAllegro5_ProcessEvent(&ev);
+				if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
+					close = true;
+				}
 			}
-		}
-		if (settingUp)
-		{
-			ImGui_ImplAllegro5_NewFrame();
-			ImGui::NewFrame();
-			print_gui_setup(); 
-			ImGui::Render();
-			al_draw_scaled_bitmap(background,
-				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
-				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
-			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
-			al_flip_display();
-			
-			if (!settingUp) {
-				cantTw = (cantTw == 0) ? cantTw=10 : cantTw;
-				my_client = Client(userTw.c_str(), cantTw);
-				if (my_client.GetToken()) {
-
-					myLCD =make_unique<allegroLCD>();
-
-					while (descargandoTweets) {
-						cargando();
-						descargandoTweets=my_client.GetTweets();
-					}
-					if (my_client.numberTweetsCollected()) {
-						currentPos = 0;
-						currentTweetData = "                   " + my_client.returnTweet(currentTweet, cantTw) + "                ";
-						currentTweetDate = my_client.returnDate(currentTweet, cantTw);
-						al_start_timer(timer);
-					}
-					else{						
-						errorMessage();
-					}				
-				}				
-			}
-		}
-		else
-		{
-			// Ya tengo usuario -> uso CLIENT Y LED
-			ImGui_ImplAllegro5_NewFrame();
-			ImGui::NewFrame();
-
-			print_gui_controls();
-
-			ImGui::Render();
-			al_set_target_backbuffer(display);
-			al_draw_scaled_bitmap(background,
-				0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
-				0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
-
-			//Evento timer nos indica que debemos imprimir los tweets
-			if (al_get_next_event(timer_queue, &timerev))
+			if (settingUp)
 			{
-				if (tickCount >= myTicks) {
-					showTweet();
-					tickCount = 0;
+				ImGui_ImplAllegro5_NewFrame();
+				ImGui::NewFrame();
+				print_gui_setup(); 
+				ImGui::Render();
+				al_draw_scaled_bitmap(background,
+					0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
+					0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
+				ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
+				al_flip_display();
+			
+				if (!settingUp) {
+					cantTw = (cantTw == 0) ? cantTw=10 : cantTw;
+					my_client = Client(userTw.c_str(), cantTw);
+					if (my_client.GetToken()) {
+
+						myLCD =make_unique<allegroLCD>();
+
+						while (descargandoTweets) {
+							cargando();
+							descargandoTweets=my_client.GetTweets();
+						}
+						if (my_client.numberTweetsCollected()) {
+							currentPos = 0;
+							currentTweetData = "                   " + my_client.returnTweet(currentTweet, cantTw) + "                ";
+							currentTweetDate = my_client.returnDate(currentTweet, cantTw);
+							al_start_timer(timer);
+						}
+						else{						
+							errorMessage();
+						}				
+					}				
 				}
-				else {
-					tickCount++;
+			}
+			else
+			{
+				// Ya tengo usuario -> uso CLIENT Y LED
+				ImGui_ImplAllegro5_NewFrame();
+				ImGui::NewFrame();
+
+				print_gui_controls();
+
+				ImGui::Render();
+				al_set_target_backbuffer(display);
+				al_draw_scaled_bitmap(background,
+					0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background),
+					0, 0, SIZE_SCREEN_X, SIZE_SCREEN_Y, 0);
+
+				//Evento timer nos indica que debemos imprimir los tweets
+				if (al_get_next_event(timer_queue, &timerev))
+				{
+					if (tickCount >= myTicks) {
+						showTweet();
+						tickCount = 0;
+					}
+					else {
+						tickCount++;
+					}
+
 				}
+			
+				al_set_target_backbuffer(display);
+				ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
+			
+				al_flip_display();
 
 			}
-			
-			al_set_target_backbuffer(display);
-			ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
-			
-			al_flip_display();
-
-		}
 		
-	} while (!close);
+		} while (!close);
+	}
 	
 }
 
@@ -208,18 +211,20 @@ void Gui::print_gui_controls() {
 		currentPos = 0;
 	}
 
-	ImGui::SameLine();
+
 
 	if (ImGui::Button("More Speed"))
 	{
-		if (myTicks < 9) {
+		if (myTicks > 1) {
 			myTicks -= 1;
 		}
 	}
 
+	ImGui::SameLine();
+
 	if (ImGui::Button("Less Speed"))
 	{
-		if (myTicks>1) {
+		if (myTicks<9) {
 			myTicks += 1;
 		}
 		

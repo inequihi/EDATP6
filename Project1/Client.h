@@ -35,7 +35,7 @@ public:
 
 private:
 	void printTweets(std::vector<Tweet> tweets_);
-	void setopt(void);
+
 	json Jdata;
 	CURL* curl;					//Variable donde vamos a guardar las configuraciones de una transferencia
 	CURLM* multiHandle;			//Variable donde vamos a atachear los easy handles
@@ -48,10 +48,11 @@ private:
 	std::string query = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=";
 	unsigned int numTweets = 0;
 	//std::vector<Tweet> tweets;
-	std::list<std::string> names;
+	//std::list<std::string> names;
 	std::string readString, token;
 	std::vector<Tweet> alltweets; 
 	int stillRunning;
 	bool estado;
+	void setopt();
 
 };
